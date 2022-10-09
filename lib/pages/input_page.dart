@@ -5,6 +5,7 @@ class InputPage extends StatefulWidget {
   final ValueChanged<String> onSubmit;
 
   @override
+  // ignore: library_private_types_in_public_api
   _InputPageState createState() => _InputPageState();
 }
 

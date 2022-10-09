@@ -1,7 +1,4 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:to_do_app/classes/utils.dart';
 
 import 'models/task.dart';
 import 'pages/input_page.dart';
