@@ -1,42 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../dialogs/delete_task_dialog.dart';
 import '../models/task.dart';
+import '../providers/list_provider.dart';
 import '../widgets/tasks_list.dart';
 import 'input_page.dart';
 
-class MyHomePage extends StatefulWidget {
+class MyHomePage extends ConsumerWidget {
   const MyHomePage({super.key});
 
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  List<Task> tasksList = mockTaskList.sublist(0);
-
-  void _addTask(String task) {
+  void _addTask(String task, WidgetRef ref) {
     Task newTask = Task(task);
-
-    tasksList.add(newTask);
-    setState(() {});
+    // ref.read(tasksListProvider)
   }
 
-  void _goToInputPage() {
+  void _goToInputPage(BuildContext context, WidgetRef ref) {
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (BuildContext context) {
       return InputPage(
-        onSubmit: _addTask,
+        onSubmit: (task) => _addTask(task, ref),
       );
     }));
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final List<Task> tasksList = ref.watch(tasksListProvider);
+
     return Scaffold(
         appBar: AppBar(
           actions: <Widget>[
-            IconButton(onPressed: _goToInputPage, icon: const Icon(Icons.input))
+            IconButton(
+                onPressed: () => _goToInputPage(context, ref),
+                icon: const Icon(Icons.input))
           ],
           title: const Text('To do app'),
         ),
