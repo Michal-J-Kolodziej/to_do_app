@@ -12,36 +12,36 @@ class MyHomePage extends ConsumerWidget {
 
   void _addTask(String task, WidgetRef ref) {
     Task newTask = Task(task);
-    // ref.read(tasksListProvider)
+    ref.read(tasksListStateProvider.notifier).addTask(newTask);
   }
 
   void _goToInputPage(BuildContext context, WidgetRef ref) {
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (BuildContext context) {
-      return InputPage(
-        onSubmit: (task) => _addTask(task, ref),
-      );
-    }));
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (BuildContext context) {
+          return InputPage(
+            onSubmit: (task) => _addTask(task, ref),
+          );
+        },
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final List<Task> tasksList = ref.watch(tasksListProvider);
-
     return Scaffold(
-        appBar: AppBar(
-          actions: <Widget>[
-            IconButton(
-                onPressed: () => _goToInputPage(context, ref),
-                icon: const Icon(Icons.input))
-          ],
-          title: const Text('To do app'),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: TasksList(
-            tasksList: tasksList,
-          ),
-        ));
+      appBar: AppBar(
+        actions: <Widget>[
+          IconButton(
+              onPressed: () => _goToInputPage(context, ref),
+              icon: const Icon(Icons.input))
+        ],
+        title: const Text('To do app'),
+      ),
+      body: const Padding(
+        padding: EdgeInsets.all(15.0),
+        child: TasksList(),
+      ),
+    );
   }
 }

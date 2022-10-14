@@ -1,35 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../dialogs/delete_task_dialog.dart';
 import '../models/task.dart';
+import '../providers/list_provider.dart';
 
-class TasksList extends StatefulWidget {
-  const TasksList({Key? key, required this.tasksList}) : super(key: key);
+class TasksList extends ConsumerWidget {
+  const TasksList({Key? key, this.isFavList = false}) : super(key: key);
 
-  final List<Task> tasksList;
+  final bool isFavList;
 
-  @override
-  State<TasksList> createState() => _TasksListState();
-}
-
-class _TasksListState extends State<TasksList> {
-  void updateTaskStage(int taskIndex) {
-    Task properTask = widget.tasksList[taskIndex];
-
-    properTask.markAsDone();
-
-    setState(() {});
-  }
-
-  void changeTaskFav(int taskIndex) {
-    Task properTask = widget.tasksList[taskIndex];
-
-    properTask.changeFav();
-
-    setState(() {});
-  }
-
-  void deleteTask(int taskIndex) async {
+  void deleteTask(BuildContext context, Task task) async {
     bool shouldDeleteTask = await showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -38,27 +19,35 @@ class _TasksListState extends State<TasksList> {
       barrierDismissible: false,
     );
 
-    if (shouldDeleteTask) {
-      widget.tasksList.removeAt(taskIndex);
-      setState(() {});
-    }
+    if (shouldDeleteTask) {}
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final List<Task> tasksList = !isFavList
+        ? ref.watch(tasksListStateProvider)
+        : ref
+            .watch(tasksListStateProvider)
+            .where((Task task) => task.fav)
+            .toList();
+
     return GridView.builder(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         childAspectRatio: 1,
       ),
-      itemCount: widget.tasksList.length,
+      itemCount: tasksList.length,
       itemBuilder: ((context, index) => ToDoTask(
-            key: widget.key,
-            task: widget.tasksList[index],
+            key: key,
+            task: tasksList[index],
             taskIndex: index,
-            updateTaskStage: updateTaskStage,
-            changeTaskFav: changeTaskFav,
-            deleteTask: deleteTask,
+            updateTaskStage: ((value) => ref
+                .read(tasksListStateProvider.notifier)
+                .changeTaskState(tasksList[index].id)),
+            changeTaskFav: ((value) => ref
+                .read(tasksListStateProvider.notifier)
+                .changeTaskFav(tasksList[index].id)),
+            deleteTask: ((value) => deleteTask(context, tasksList[index])),
           )),
     );
   }

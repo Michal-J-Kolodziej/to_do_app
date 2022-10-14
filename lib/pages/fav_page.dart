@@ -14,10 +14,10 @@ class FavPage extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Favourites'),
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(15.0),
+        body: const Padding(
+          padding: EdgeInsets.all(15.0),
           child: TasksList(
-            tasksList: tasksList,
+            isFavList: true,
           ),
         ));
   }
