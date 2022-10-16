@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../dialogs/delete_task_dialog.dart';
-import '../models/task.dart';
+import '../models/task/task.dart';
 import '../providers/list_provider.dart';
 import '../widgets/tasks_list.dart';
 import 'input_page.dart';
@@ -10,9 +9,8 @@ import 'input_page.dart';
 class MyHomePage extends ConsumerWidget {
   const MyHomePage({super.key});
 
-  void _addTask(String task, WidgetRef ref) {
-    Task newTask = Task(task);
-    ref.read(tasksListStateProvider.notifier).addTask(newTask);
+  void _addTask(Task task, WidgetRef ref) {
+    ref.read(tasksListStateProvider.notifier).addTask(task);
   }
 
   void _goToInputPage(BuildContext context, WidgetRef ref) {

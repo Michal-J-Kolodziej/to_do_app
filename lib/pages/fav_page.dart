@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-
-import '../models/task.dart';
 import '../widgets/tasks_list.dart';
 
 class FavPage extends StatelessWidget {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../dialogs/delete_task_dialog.dart';
-import '../models/task.dart';
+import '../models/task/task.dart';
 import '../providers/list_provider.dart';
 
 class TasksList extends ConsumerWidget {

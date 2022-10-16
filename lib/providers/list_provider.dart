@@ -1,7 +1,7 @@
 import 'package:hive/hive.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../models/task.dart';
+import '../models/task/task.dart';
 
 class TasksListState extends StateNotifier<List<Task>> {
   TasksListState() : super([]) {

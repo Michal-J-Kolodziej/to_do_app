@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:to_do_app/enums/taskType/task_type.dart';
+
+import '../models/task/task.dart';
 
 class InputPage extends StatefulWidget {
   const InputPage({Key? key, required this.onSubmit}) : super(key: key);
-  final ValueChanged<String> onSubmit;
+  final ValueChanged<Task> onSubmit;
 
   @override
   // ignore: library_private_types_in_public_api
@@ -10,12 +13,22 @@ class InputPage extends StatefulWidget {
 }
 
 class _InputPageState extends State<InputPage> {
-  String newTask = '';
+  String newTaskName = '';
+  TaskType taskType = TaskType.home;
+
   final _formKey = GlobalKey<FormState>();
 
-  String? _taskValidator(String? value) {
+  String? _taskNameValidator(String? value) {
     if (value != null && value.isEmpty) {
       return 'Task must not be empty';
+    }
+
+    return null;
+  }
+
+  String? _taskTypeValidator(dynamic value) {
+    if (value == null) {
+      return 'Task type must not be empty';
     }
 
     return null;
@@ -34,7 +47,8 @@ class _InputPageState extends State<InputPage> {
           onPressed: () {
             if (_formKey.currentState != null &&
                 _formKey.currentState!.validate()) {
-              widget.onSubmit(newTask);
+              widget.onSubmit(Task(newTaskName, taskType));
+
               Navigator.of(context).pop();
             }
           },
@@ -42,32 +56,68 @@ class _InputPageState extends State<InputPage> {
       ),
       body: Form(
         key: _formKey,
-        child: Column(children: <Widget>[
-          Row(
-            children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width,
-                height: 100.0,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    validator: _taskValidator,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'New task',
-                      hintText: 'Enter task',
+        child: Column(
+          children: <Widget>[
+            Row(
+              children: [
+                SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  height: 100.0,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      validator: _taskNameValidator,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'New task',
+                        hintText: 'Enter task',
+                      ),
+                      onChanged: (value) {
+                        setState(() {
+                          newTaskName = value;
+                        });
+                      },
                     ),
-                    onChanged: (value) {
-                      setState(() {
-                        newTask = value;
-                      });
-                    },
                   ),
-                ),
-              )
-            ],
-          )
-        ]),
+                )
+              ],
+            ),
+            Row(
+              children: [
+                SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  height: 100.0,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: DropdownButtonFormField(
+                      validator: _taskTypeValidator,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'New task type',
+                        hintText: 'Choose task type',
+                      ),
+                      items: TaskType.values
+                          .map<DropdownMenuItem>(
+                            ((TaskType e) => DropdownMenuItem(
+                                  value: e,
+                                  child: Text(e.name),
+                                )),
+                          )
+                          .toList(),
+                      onChanged: (value) {
+                        if (value != null) {
+                          setState(() {
+                            taskType = value;
+                          });
+                        }
+                      },
+                    ),
+                  ),
+                )
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

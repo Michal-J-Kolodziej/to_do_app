@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:to_do_app/enums/taskType/task_type.dart';
 import 'package:to_do_app/pages/fav_page.dart';
 
-import 'models/task.dart';
+import 'models/task/task.dart';
 import 'pages/home_page.dart';
 
 void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter<Task>(TaskAdapter());
   Hive.registerAdapter<Color>(ColorAdapter());
+  Hive.registerAdapter<TaskType>(TaskTypeAdapter());
   await Hive.openBox<Task>(tasksBoxName);
   runApp(const ProviderScope(
     child: MyApp(),

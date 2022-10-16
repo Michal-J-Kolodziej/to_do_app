@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:random_string/random_string.dart';
 
-import '../classes/utils.dart';
+import '../../classes/utils.dart';
+import '../../enums/taskType/task_type.dart';
 
 part 'task.g.dart';
 
@@ -27,7 +28,10 @@ class Task {
   @HiveField(4)
   final Color color = colorsUI[Random().nextInt(colorsUI.length)];
 
-  Task(this.text, [this.done = false, this.fav = false]);
+  @HiveField(5)
+  TaskType taskType;
+
+  Task(this.text, this.taskType, [this.done = false, this.fav = false]);
 
   markAsDone() {
     done = !done;
