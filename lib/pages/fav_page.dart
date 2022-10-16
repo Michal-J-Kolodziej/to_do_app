@@ -4,9 +4,7 @@ import '../models/task.dart';
 import '../widgets/tasks_list.dart';
 
 class FavPage extends StatelessWidget {
-  const FavPage({Key? key, required this.tasksList}) : super(key: key);
-
-  final List<Task> tasksList;
+  const FavPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
