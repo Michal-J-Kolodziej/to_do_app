@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../models/task/task.dart';
 import '../providers/list_provider.dart';
+import '../widgets/task_type_filter_list.dart';
 import '../widgets/tasks_list.dart';
 import 'input_page.dart';
 
@@ -36,9 +37,14 @@ class MyHomePage extends ConsumerWidget {
         ],
         title: const Text('To do app'),
       ),
-      body: const Padding(
-        padding: EdgeInsets.all(15.0),
-        child: TasksList(),
+      body: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Column(
+          children: const <Widget>[
+            TaskTypeFilterList(),
+            Expanded(child: TasksList()),
+          ],
+        ),
       ),
     );
   }
