@@ -5,7 +5,7 @@ class TaskTypeFilter {
   bool applied;
   late String name;
 
-  TaskTypeFilter(this.taskType, [this.applied = false]) {
-    name = taskType.toString();
+  TaskTypeFilter(this.taskType, [this.applied = true]) {
+    name = taskType.name.toString();
   }
 }

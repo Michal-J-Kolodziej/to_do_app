@@ -1,50 +1,73 @@
 import 'package:hive/hive.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:to_do_app/providers/task_type_provider.dart';
 
 import '../models/task/task.dart';
+import '../models/taskTypeFilter/task_type_filter.dart';
 
 class TasksListState extends StateNotifier<List<Task>> {
-  TasksListState() : super([]) {
-    state = Hive.box<Task>(tasksBoxName).values.toList();
+  late final List<Task> _oryginalList;
+  List<TaskTypeFilter> _taskTypes = [];
+
+  TasksListState(Ref ref) : super([]) {
+    _oryginalList = Hive.box<Task>(tasksBoxName).values.toList();
+
+    state = _oryginalList;
+
+    ref.listen(taskTypeListStateProvider, (previous, next) {
+      _taskTypes = next;
+      _filterState();
+    });
   }
 
   addTask(Task task) {
-    state = [...state, task];
+    _oryginalList = [..._oryginalList, task];
+    _filterState();
     _saveToBox();
   }
 
   deleteTask(String taskId) {
-    state.removeWhere((Task task) => task.id == taskId);
+    _oryginalList.removeWhere((Task task) => task.id == taskId);
 
-    state = [...state];
+    _oryginalList = [..._oryginalList];
+    _filterState();
     _saveToBox();
   }
 
   changeTaskState(String taskId) {
-    state.firstWhere((Task task) => task.id == taskId).markAsDone();
+    _oryginalList.firstWhere((Task task) => task.id == taskId).markAsDone();
 
-    state = [...state];
+    _oryginalList = [..._oryginalList];
+    _filterState();
     _saveToBox();
   }
 
   changeTaskFav(String taskId) {
-    state.firstWhere((Task task) => task.id == taskId).changeFav();
+    _oryginalList.firstWhere((Task task) => task.id == taskId).changeFav();
 
-    state = [...state];
+    _oryginalList = [..._oryginalList];
+    _filterState();
     _saveToBox();
   }
 
   _saveToBox() {
     Hive.box<Task>(tasksBoxName).clear();
-    for (var task in state) {
+    for (var task in _oryginalList) {
       Hive.box<Task>(tasksBoxName).put(task.id, task);
     }
+  }
+
+  _filterState() {
+    state = _oryginalList.where((Task oryginalTask) {
+      return _taskTypes.any((taskType) =>
+          taskType.applied && oryginalTask.taskType == taskType.taskType);
+    }).toList();
   }
 }
 
 final tasksListStateProvider =
     StateNotifierProvider<TasksListState, List<Task>>(
-  (_) {
-    return TasksListState();
+  (ref) {
+    return TasksListState(ref);
   },
 );

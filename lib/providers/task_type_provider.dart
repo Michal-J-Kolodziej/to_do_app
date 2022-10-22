@@ -13,6 +13,10 @@ class TaskTypeState extends StateNotifier<List<TaskTypeFilter>> {
 
     state = [...state];
   }
+
+  List<TaskTypeFilter> getApplied() {
+    return state.where((TaskTypeFilter taskType) => taskType.applied).toList();
+  }
 }
 
 final taskTypeListStateProvider =

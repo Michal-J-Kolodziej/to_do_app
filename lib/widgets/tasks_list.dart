@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:to_do_app/providers/task_type_provider.dart';
 
 import '../dialogs/delete_task_dialog.dart';
 import '../models/task/task.dart';
@@ -24,12 +25,18 @@ class TasksList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final List<Task> tasksList = !isFavList
+    List<Task> tasksList = !isFavList
         ? ref.watch(tasksListStateProvider)
         : ref
             .watch(tasksListStateProvider)
             .where((Task task) => task.fav)
             .toList();
+
+    ref.listen(taskTypeListStateProvider, (previous, next) {
+      tasksList = tasksList.where((element) {
+        return next.any((taskType) => taskType.name == element.taskType.name);
+      }).toList();
+    });
 
     return GridView.builder(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -89,12 +96,23 @@ class ToDoTask extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                SizedBox(
-                  width: double.infinity,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(task.text),
-                  ),
+                Column(
+                  children: [
+                    SizedBox(
+                      width: double.infinity,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(task.text),
+                      ),
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(task.taskType.name),
+                      ),
+                    ),
+                  ],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,

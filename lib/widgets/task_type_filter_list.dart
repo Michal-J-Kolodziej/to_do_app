@@ -36,21 +36,23 @@ class TaskTypeFilterList extends ConsumerWidget {
                     boxShadow: typeFilter.applied
                         ? <BoxShadow>[
                             const BoxShadow(
-                                color: Colors.black26,
-                                offset: Offset(8.0, 8.0),
-                                blurRadius: 8.0)
+                              color: Colors.black26,
+                              offset: Offset(8.0, 8.0),
+                              blurRadius: 8.0,
+                            )
                           ]
                         : <BoxShadow>[
                             const BoxShadow(
-                                color: Colors.black12,
-                                offset: Offset(4.0, 4.0),
-                                blurRadius: 4.0)
+                              color: Colors.black12,
+                              offset: Offset(4.0, 4.0),
+                              blurRadius: 4.0,
+                            )
                           ],
                   ),
                   child: Center(
-                    child: Text(typeFilter.name
-                        // typeFilter.name[0].toUpperCase(),
-                        ),
+                    child: Text(
+                      typeFilter.name[0].toUpperCase(),
+                    ),
                   ),
                 ),
               ),

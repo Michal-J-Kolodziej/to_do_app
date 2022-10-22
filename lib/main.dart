@@ -9,9 +9,9 @@ import 'pages/home_page.dart';
 
 void main() async {
   await Hive.initFlutter();
+  Hive.registerAdapter<TaskType>(TaskTypeAdapter());
   Hive.registerAdapter<Task>(TaskAdapter());
   Hive.registerAdapter<Color>(ColorAdapter());
-  Hive.registerAdapter<TaskType>(TaskTypeAdapter());
   await Hive.openBox<Task>(tasksBoxName);
   runApp(const ProviderScope(
     child: MyApp(),
@@ -56,9 +56,9 @@ class _SwipeTapBarState extends State<SwipeTapBar> {
     return Scaffold(
       body: PageView(
         controller: _pageViewController,
-        children: <Widget>[
-          const MyHomePage(),
-          const FavPage(),
+        children: const <Widget>[
+          MyHomePage(),
+          FavPage(),
         ],
         onPageChanged: (int index) {
           setState(() {
@@ -69,14 +69,21 @@ class _SwipeTapBarState extends State<SwipeTapBar> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _activePage,
         onTap: (int index) {
-          _pageViewController.animateToPage(index,
-              duration: const Duration(milliseconds: 200),
-              curve: Curves.linear);
+          _pageViewController.animateToPage(
+            index,
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.linear,
+          );
         },
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Todo\'s'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.favorite), label: 'Favourites'),
+            icon: Icon(Icons.list),
+            label: 'Todo\'s',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            label: 'Favourites',
+          ),
         ],
       ),
     );
